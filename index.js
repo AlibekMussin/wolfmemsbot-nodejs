@@ -1,7 +1,7 @@
 const axios = require('axios');
 const { Telegraf } = require('telegraf')
 const fs = require('fs');
-const bot = new Telegraf('6053282892:AAH8rr6X0SLB5FYMYModG3UylGzVX10Ot2Q');
+const bot = new Telegraf('6008276365:AAEwH76G7vMKsHg73ek4a0fulpWlyJVTJsA');
 
 
 bot.start((ctx) => ctx.reply('Привет! Для отправки мема введите команду /send_meme'));
