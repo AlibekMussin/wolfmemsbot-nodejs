@@ -1,0 +1,13 @@
+extends layout
+block content
+  link(rel='stylesheet', href='https://fonts.googleapis.com/icon?family=Material+Icons')
+  link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css')
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js')
+  .grid-container
+    each meme in memes
+      .grid-item
+        img(src=`/${meme.image_url}`)
+        .buttons
+          button.accept-button(type='button') Accept
+          button.reject-button(type='button') Reject
+    

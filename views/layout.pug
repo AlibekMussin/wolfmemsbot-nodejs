@@ -1,0 +1,40 @@
+html
+  head
+    title = Meme Gallery
+    link(rel='stylesheet', href='/stylesheets/style.css')
+
+  body
+    block content
+
+    script(src='/public/index.js')
+
+    style.
+      .grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        grid-gap: 10px;
+      }
+
+      .grid-item {
+        position: relative;
+        width: 250px;
+        padding: 5px;
+      }
+
+
+      .buttons {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: rgba(255, 255, 255, 0.5);
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .accept-button,
+      .reject-button {
+        flex: 1;
+        margin: 0 5px;
+      }
