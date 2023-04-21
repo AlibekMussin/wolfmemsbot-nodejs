@@ -27,11 +27,39 @@ db.once('open', function () {
 });
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
-console.log(process.env.BOT_TOKEN);
-bot.start((ctx) => {  
-  ctx.reply('Приветствую. Вот тебе рандомный мем:');
-  ctx.reply('Если хочешь прислать свой мем, выбери картинку с мемом на своём компьютере, а в подписи напиши /send_meme и отправь нам.');
+// console.log(process.env.BOT_TOKEN);
+bot.command('auf', (ctx) => {
+  ctx.reply('Вот тебе рандомный мем:');
+  MemeRequest.countDocuments().exec()
+    .then((count) => {
+      const random = Math.floor(Math.random() * count);
+      return MemeRequest.findOne().skip(random).exec();
+    })
+    .then((memeRequest) => {
+      // Получаем URL картинки из объекта memeRequest
+      const imageUrl = 'http://localhost:3000/'+memeRequest.image_url;
+      // console.log('imageUrl:',imageUrl);
+      // Отправляем запрос на получение изображения по URL-адресу
+      return axios.get(imageUrl, { responseType: 'arraybuffer' });
+    })
+    .then((response) => {
+      // Преобразуем полученный буфер в формат base64
+      const imageData = Buffer.from(response.data).toString('base64');
+      // Отправляем изображение пользователю через телеграм бота
+      ctx.replyWithPhoto({ source: Buffer.from(imageData, 'base64') });
+    })
+    .catch((err) => {
+      console.error(err);
+      ctx.reply('Произошла ошибка при получении рандомного мема');
+    });
 });
+
+bot.start((ctx) => {  
+  ctx.reply('Приветствую.');
+  ctx.reply('Чтобы получить рандомный мем, пришликоманду /auf.');
+  ctx.reply('Если хочешь прислать свой мем, выбери картинку с мемом на своём компьютере, а в подписи напиши /send_meme и отправь нам.');    
+});
+
 
 bot.on('photo', async (ctx) => {
   // console.log('test:',ctx.message);
@@ -72,7 +100,7 @@ bot.on('photo', async (ctx) => {
   }
   else {
     // Если это не команда "send_meme", отправляем сообщение о том, что фото не было сохранено
-    ctx.reply('Это фото не было сохранено. Чтобы сохранить фото, отправьте команду /send_meme перед фото.');
+    ctx.reply('Это фото не было сохранено. Чтобы сохранить фото, отправьте команду /send_meme в сообщении с фото.');
   }
 });
 
