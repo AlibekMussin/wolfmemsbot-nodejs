@@ -7,11 +7,15 @@ const app = express();
 const port = 3000;
 const { Telegraf } = require('telegraf');
 
+app.use('/static', express.static(__dirname + '/public'));
+
 const memeRoutes = require('./routes/memeRoutes');
+
 const MemeRequest = require('./models/MemeRequest');
 const path = require('path');
 
 require('dotenv').config();
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -50,13 +54,13 @@ bot.command('auf', (ctx) => {
     })
     .catch((err) => {
       console.error(err);
-      ctx.reply('Произошла ошибка при получении рандомного мема');
+      ctx.reply('Произошла ошибка при получении рандомного мема. Попробуйте еще раз вызвать команду /auf');
     });
 });
 
 bot.start((ctx) => {  
   ctx.reply('Приветствую.');
-  ctx.reply('Чтобы получить рандомный мем, пришликоманду /auf.');
+  ctx.reply('Чтобы получить рандомный мем, пришли команду /auf.');
   ctx.reply('Если хочешь прислать свой мем, выбери картинку с мемом на своём компьютере, а в подписи напиши /send_meme и отправь нам.');    
 });
 

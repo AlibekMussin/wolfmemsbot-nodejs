@@ -6,7 +6,9 @@ const fs = require('fs');
 
 router.get('/memes', async (req, res) => {
   try {
-    const memes = await MemeRequest.find({ status: 'APPROVED' });
+    const memes = await MemeRequest.find({
+      //  status: 'APPROVED'
+       });
     res.render('index', { memes });
   } catch (error) {
     console.log(error);
