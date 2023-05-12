@@ -3,11 +3,67 @@ block content
   link(rel='stylesheet', href='https://fonts.googleapis.com/icon?family=Material+Icons')
   link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css')
   script(src='https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js')
+  script.
+      async function acceptMeme(id) {
+        console.log(`Accepted meme ${id}`);
+        try {
+          const response = await fetch(`/app/memes/${id}/accept`, { method: 'POST' });
+          console.log(response);
+          if (response.ok) {
+            console.log('hide buttons');
+            // Если запрос выполнен успешно, обновляем соответствующий элемент на странице
+            const item_accept = document.getElementById(`meme-${id}-accept`);
+            const item_reject = document.getElementById(`meme-${id}-reject`);
+            const div = document.getElementById(`meme-${id}-div`);
+            item_accept.style.display = 'none';
+            item_reject.style.display = 'none';
+            const approvedText = document.createElement('span');
+            approvedText.textContent = 'Одобрено';
+            div.appendChild(approvedText);
+            
+          } else {
+            console.log(response.status);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+    }
+    async function rejectMeme(id) {
+        console.log(`Rejected meme ${id}`);
+        try {
+          const response = await fetch(`/app/memes/${id}/reject`, { method: 'POST' });
+          console.log(response);
+          if (response.ok) {
+            console.log('hide buttons');
+            // Если запрос выполнен успешно, обновляем соответствующий элемент на странице
+            const item_accept = document.getElementById(`meme-${id}-accept`);
+            const item_reject = document.getElementById(`meme-${id}-reject`);
+            const div = document.getElementById(`meme-${id}-div`);
+            item_accept.style.display = 'none';
+            item_reject.style.display = 'none';
+            const approvedText = document.createElement('span');
+            approvedText.textContent = 'Отклонено';
+            div.appendChild(approvedText);
+            
+          } else {
+            console.log(response.status);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+    }
   .grid-container
-    each meme in memes
+    each meme, index in memes
       .grid-item
         img(src=`/${meme.image_url}`)
         .buttons
-          button.accept-button(type='button') Accept
-          button.reject-button(type='button') Reject
-    
+          if meme.status === 'APPROVED'
+            span.status.accepted Одобрено
+            button.reject-button(type='button', id =`meme-${meme._id}-reject`, onclick=`rejectMeme('${meme._id}')`) Reject
+          else if meme.status === 'DECLINED'
+            span.status.rejected Отклонено
+            button.accept-button(type='button', id =`meme-${meme._id}-accept`, onclick=`acceptMeme('${meme._id}')`) Accept
+          else
+            button.accept-button(type='button', id =`meme-${meme._id}-accept`, onclick=`acceptMeme('${meme._id}')`) Accept
+            button.reject-button(type='button', id =`meme-${meme._id}-reject`, onclick=`rejectMeme('${meme._id}')`) Reject
+        div(id =`meme-${meme._id}-div`)

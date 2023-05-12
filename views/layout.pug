@@ -3,7 +3,18 @@ html
     title = Meme Gallery
     //- link(rel='stylesheet', href='/stylesheets/style.css')
 
+  nav
+    .nav-wrapper
+      a.brand-logo(href='#') My Site
+      ul.right
+        li
+          a(href='#') Home
+        li
+          a(href='#') About
+        li
+          a(href='#') Contact
   body
+  
     block content
 
     script(src='/static/index.js')
@@ -44,4 +55,14 @@ html
       .reject-button {
         flex: 1;
         margin: 0 5px;
+      }
+      .accepted{
+        background: green;
+        color: white;
+        padding:5px;
+      }
+      .rejected{
+        background: red;
+        color: white;
+        padding:5px;
       }
