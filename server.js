@@ -34,17 +34,22 @@ const bot = new Telegraf(process.env.BOT_TOKEN);
 // console.log(process.env.BOT_TOKEN);
 bot.command('auf', (ctx) => {
   ctx.reply('Вот тебе рандомный мем:');
-  MemeRequest.countDocuments().exec()
+  MemeRequest.countDocuments({ status: 'APPROVED' }).exec()
     .then((count) => {
       const random = Math.floor(Math.random() * count);
-      return MemeRequest.findOne().skip(random).exec();
+      return MemeRequest.findOne({ status: 'APPROVED' }).skip(random).exec();
     })
     .then((memeRequest) => {
       // Получаем URL картинки из объекта memeRequest
-      const imageUrl = 'http://localhost:3000/'+memeRequest.image_url;
-      // console.log('imageUrl:',imageUrl);
-      // Отправляем запрос на получение изображения по URL-адресу
-      return axios.get(imageUrl, { responseType: 'arraybuffer' });
+      if (memeRequest && memeRequest.status === 'APPROVED') {
+        const imageUrl = 'http://localhost:3000/'+memeRequest.image_url;
+        // console.log('imageUrl:',imageUrl);
+        // Отправляем запрос на получение изображения по URL-адресу
+        return axios.get(imageUrl, { responseType: 'arraybuffer' });
+      }
+      else {
+        throw new Error('Не удалось найти рандомный мем. Вызовите еще раз команду /auf');
+      }
     })
     .then((response) => {
       // Преобразуем полученный буфер в формат base64
